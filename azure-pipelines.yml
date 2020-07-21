@@ -8,9 +8,30 @@ trigger:
 
 pool: 'AWS'
 
-variables:
-  JAVA_HOME_8_X64: "/usr/lib/jvm/java-8-openjdk-amd64"
 steps:
+
 - task: Maven@3
   inputs:
+    goals: 'compile'
+  displayName: Compile COde
+
+- task: Maven@3
+  displayName: Lint Check
+  inputs:
+    goals: 'checkstyle:checkstyle'
+
+- task: Maven@3
+  displayName: Build Package
+  inputs:
     goals: 'package'
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      cd target
+      az artifacts universal publish --organization https://dev.azure.com/DevOps-Batches/ --project="DevOps48" --scope project --feed RoboShop --name  $(appName) --version 1.0.$(Build.BuildId) --description "$(appName)" --path .
+  displayName: Publish Artifacts
+
+variables:
+  appName: "shipping"
+  JAVA_HOME_8_X64: "/usr/lib/jvm/java-8-openjdk-amd64"
