@@ -31,7 +31,7 @@ steps:
       cd target
       mkdir publish
       cp *depen*.jar publish
-      cd publsih
+      cd publish
       az artifacts universal publish --organization https://dev.azure.com/DevOps-Batches/ --project="DevOps48" --scope project --feed RoboShop --name  $(appName) --version 1.0.$(Build.BuildId) --description "$(appName)" --path .
   displayName: Publish Artifacts
 
